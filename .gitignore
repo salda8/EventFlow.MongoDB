@@ -195,3 +195,4 @@ FakesAssemblies/
 
 # FAKE
 /.fake
+/Source/EventFlow.MongoDB/EventFlow.MongoDB.nuspec

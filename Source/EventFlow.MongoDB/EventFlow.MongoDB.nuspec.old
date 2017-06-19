@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>EventFlow.MongoDB</id>
+    <version>$version$</version>
+    <title>EventFlow.MongoDB</title>
+    <authors>Jan Feyen, Warren Pieterse</authors>
+    <owners>Jan Feyen, Warren Pieterse</owners>
+    <licenseUrl>https://raw.githubusercontent.com/eventflow/EventFlow/develop/LICENSE</licenseUrl>
+    <projectUrl>http://docs.geteventflow.net/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/eventflow/EventFlow/develop/icon-128.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>MongoDB ReadStore and Snapshot Persistence for EventFlow</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright (c) Jan Feyen/Warren Pieterse 2015 - 2017</copyright>
+    <tags>CQRS ES event sourcing MongoDB</tags>
+    <repository type="git" url="https://github.com/eventflow/EventFlow.MongoDB" />
+  </metadata>
+</package>
