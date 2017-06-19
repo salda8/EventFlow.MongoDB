@@ -1,7 +1,0 @@
-MongoDB.Driver
-Newtonsoft.Json
-EventFlow
-
-group Test
-	FluentAssertions
-	NUnit
