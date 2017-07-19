@@ -18,7 +18,7 @@ namespace EventFlow.MongoDB.ReadStores
                 typeof(TReadModel),
                 t =>
                 {
-                    var collectionType = t.GetCustomAttribute<MongoDbCollectionNameAttribute>();
+                    var collectionType = t.GetTypeInfo().GetCustomAttribute<MongoDbCollectionNameAttribute>();
                     var indexName = collectionType == null
                         ? $"eventflow-{typeof(TReadModel).PrettyPrint().ToLowerInvariant()}"
                         : collectionType.CollectionName;

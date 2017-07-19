@@ -47,7 +47,7 @@ namespace EventFlow.MongoDB.ReadStores
 
             var collection = _mongoDatabase.GetCollection<TReadModel>(readModelDescription.RootCollectionName.Value);
             var filter = Builders<TReadModel>.Filter.Eq(readModel => readModel._id, id);
-            var result = collection.Find(filter).First();
+            var result = await collection.Find(filter).FirstAsync();
             return ReadModelEnvelope<TReadModel>.With(id, result);
         }
 
