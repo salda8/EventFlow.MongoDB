@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
+    <PackageId>EventFlow.MongoDB</PackageId>
+    <PackageVersion>0.0.2</PackageVersion>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <title>EventFlow.MongoDB</title>
-    <authors>Jan Feyen, Warren Pieterse</authors>
-    <owners>Jan Feyen, Warren Pieterse</owners>
-    <copyright>Copyright (c) Jan Feyen/Warren Pieterse 2015 - 2017</copyright>
-    <description>MongoDB ReadStore and Snapshot Persistence for EventFlow</description>
+    <Title>EventFlow.MongoDB</Title>
+    <Authors>Jan Feyen, Warren Pieterse</Authors>
+    <Owners>Jan Feyen, Warren Pieterse</Owners>
+    <Copyright>Copyright (c) Jan Feyen/Warren Pieterse 2015 - 2017</Copyright>
+    <Description>MongoDB ReadStore and Snapshot Persistence for EventFlow</Description>
     <PackageTags>CQRS ES event sourcing MongoDB</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/eventflow/EventFlow.MongoDB</RepositoryUrl>
@@ -18,9 +20,10 @@
     <PackageIconUrl>https://raw.githubusercontent.com/eventflow/EventFlow/develop/icon-128.png</PackageIconUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/eventflow/EventFlow.MongoDB/develop/LICENSE</PackageLicenseUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageReleaseNotes>UPDATED BY BUILD</PackageReleaseNotes>
+    <PackageReleaseNotes>Support for .NET Standard</PackageReleaseNotes>
     <DebugType>embedded</DebugType>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <PackageTags>CQRS ES event sourcing MongoDB</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
