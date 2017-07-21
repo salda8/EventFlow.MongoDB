@@ -1,19 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow.MongoDB", "Source\EventFlow.MongoDB\EventFlow.MongoDB.csproj", "{AB7D4AC7-4B1E-4CAE-85EF-E9100C382EB5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{7F4840D9-0536-40DF-AB2D-2B63AD008B05}"
-	ProjectSection(SolutionItems) = preProject
-		paket.dependencies = paket.dependencies
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4C62ABE7-8D55-44BA-B3CE-C14B6D81FBDA}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow.MongoDB", "Source\EventFlow.MongoDB\EventFlow.MongoDB.csproj", "{30699559-D989-4203-84A2-8CC431122E69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +16,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AB7D4AC7-4B1E-4CAE-85EF-E9100C382EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB7D4AC7-4B1E-4CAE-85EF-E9100C382EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB7D4AC7-4B1E-4CAE-85EF-E9100C382EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB7D4AC7-4B1E-4CAE-85EF-E9100C382EB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30699559-D989-4203-84A2-8CC431122E69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30699559-D989-4203-84A2-8CC431122E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30699559-D989-4203-84A2-8CC431122E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30699559-D989-4203-84A2-8CC431122E69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

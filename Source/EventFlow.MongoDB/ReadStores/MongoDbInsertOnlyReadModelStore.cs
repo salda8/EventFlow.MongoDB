@@ -40,9 +40,9 @@ namespace EventFlow.MongoDB.ReadStores
             return Task.FromResult(0);
         }
 
-        public async Task<ReadModelEnvelope<TReadModel>> GetAsync(string id, CancellationToken cancellationToken)
+        public Task<ReadModelEnvelope<TReadModel>> GetAsync(string id, CancellationToken cancellationToken)
         {
-            return ReadModelEnvelope<TReadModel>.Empty(id);
+            return Task.FromResult(ReadModelEnvelope<TReadModel>.Empty(id));
         }
 
         public async Task UpdateAsync(IReadOnlyCollection<ReadModelUpdate> readModelUpdates, IReadModelContext readModelContext, Func<IReadModelContext, IReadOnlyCollection<IDomainEvent>, ReadModelEnvelope<TReadModel>, CancellationToken, Task<ReadModelEnvelope<TReadModel>>> updateReadModel, CancellationToken cancellationToken)
