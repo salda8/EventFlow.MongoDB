@@ -2,6 +2,7 @@
 using EventFlow.Extensions;
 using EventFlow.MongoDB.ReadStores;
 using EventFlow.ReadStores;
+using EventFlow.MongoDB.EventStore;
 using MongoDB.Driver;
 using System;
 
@@ -47,6 +48,7 @@ namespace EventFlow.MongoDB.Extensions
                 sr.Register(f => mongoDatabaseFactory(), Lifetime.Singleton);
                 sr.Register<IReadModelDescriptionProvider, ReadModelDescriptionProvider>(Lifetime.Singleton, true);
                 sr.Register<IInsertOnlyReadModelDescriptionProvider, InsertOnlyReadModelDescriptionProvider>(Lifetime.Singleton, true);
+                sr.Register<IMongoDbEventSequenceStore, MongoDbEventSequenceStore>(Lifetime.Singleton);
             });
         }
 
