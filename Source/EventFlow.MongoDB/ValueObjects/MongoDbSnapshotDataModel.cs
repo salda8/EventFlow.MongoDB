@@ -5,9 +5,6 @@ using Newtonsoft.Json;
 
 namespace EventFlow.MongoDB.ValueObjects
 {
-    using System;
-    using EventStores;
-
     public class MongoDbSnapshotDataModel : ValueObject
     {
         [BsonElement("_id")]
