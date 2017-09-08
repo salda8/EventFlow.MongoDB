@@ -1,24 +1,29 @@
-﻿using EventFlow.Aggregates;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using EventFlow.Aggregates;
 using EventFlow.Extensions;
 using EventFlow.Logs;
 using EventFlow.ReadStores;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using EventFlow.MongoDB.ValueObjects;
 
 namespace EventFlow.MongoDB.ReadStores
 {
-    public class MongoDbReadModelStore<TReadModel> : IMongoDbReadModelStore<TReadModel>
+	
+
+
+	public class MongoDbReadModelStore<TReadModel> : IMongoDbReadModelStore<TReadModel>
         where TReadModel : class, IMongoDbReadModel, new()
     {
         private readonly ILog _log;
         private readonly IMongoDatabase _mongoDatabase;
         private readonly IReadModelDescriptionProvider _readModelDescriptionProvider;
 
-        public MongoDbReadModelStore(
+		public MongoDbReadModelStore(
             ILog log,
             IMongoDatabase mongoDatabase,
             IReadModelDescriptionProvider readModelDescriptionProvider)
@@ -26,7 +31,7 @@ namespace EventFlow.MongoDB.ReadStores
             _log = log;
             _mongoDatabase = mongoDatabase;
             _readModelDescriptionProvider = readModelDescriptionProvider;
-        }
+		}
 
         public Task DeleteAllAsync(CancellationToken cancellationToken)
         {
@@ -34,7 +39,7 @@ namespace EventFlow.MongoDB.ReadStores
 
             _log.Information($"Deleting ALL '{typeof(TReadModel).PrettyPrint()}' by DROPPING COLLECTION '{readModelDescription.RootCollectionName}'!");
 
-            _mongoDatabase.DropCollection(readModelDescription.RootCollectionName.Value);
+            _mongoDatabase.DropCollection(readModelDescription.RootCollectionName.Value, cancellationToken);
 
             return Task.FromResult(0);
         }
@@ -47,11 +52,21 @@ namespace EventFlow.MongoDB.ReadStores
 
             var collection = _mongoDatabase.GetCollection<TReadModel>(readModelDescription.RootCollectionName.Value);
             var filter = Builders<TReadModel>.Filter.Eq(readModel => readModel._id, id);
-            var result = await collection.Find(filter).FirstAsync();
+            var result = await collection.Find(filter).FirstAsync(cancellationToken);
             return ReadModelEnvelope<TReadModel>.With(id, result);
         }
 
-        public async Task UpdateAsync(IReadOnlyCollection<ReadModelUpdate> readModelUpdates, IReadModelContext readModelContext, Func<IReadModelContext, IReadOnlyCollection<IDomainEvent>, ReadModelEnvelope<TReadModel>, CancellationToken, Task<ReadModelEnvelope<TReadModel>>> updateReadModel, CancellationToken cancellationToken)
+	    public async Task<IAsyncCursor<TReadModel>> FindAsync(Expression<Func<TReadModel, bool>> filter, FindOptions<TReadModel, TReadModel> options = null, CancellationToken cancellationToken = new CancellationToken())
+	    {
+			var readModelDescription = _readModelDescriptionProvider.GetReadModelDescription<TReadModel>();
+		    var collection = _mongoDatabase.GetCollection<TReadModel>(readModelDescription.RootCollectionName.Value);
+
+		    _log.Verbose(() => $"Finding read model '{typeof(TReadModel).PrettyPrint()}' with expression '{filter}' from collection '{readModelDescription.RootCollectionName}'");
+			
+			return await collection.FindAsync(filter, options, cancellationToken);
+		}
+
+		public async Task UpdateAsync(IReadOnlyCollection<ReadModelUpdate> readModelUpdates, IReadModelContext readModelContext, Func<IReadModelContext, IReadOnlyCollection<IDomainEvent>, ReadModelEnvelope<TReadModel>, CancellationToken, Task<ReadModelEnvelope<TReadModel>>> updateReadModel, CancellationToken cancellationToken)
         {
             var readModelDescription = _readModelDescriptionProvider.GetReadModelDescription<TReadModel>();
 
