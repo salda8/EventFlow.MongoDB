@@ -8,7 +8,7 @@ using MongoDB.Driver;
 namespace EventFlow.MongoDB.ReadStores
 {
 	public interface IMongoDbReadModelStore<TReadModel> : IReadModelStore<TReadModel>
-        where TReadModel : class, IReadModel, new()
+		where TReadModel : class, IReadModel, new()
 	{
 		Task<IAsyncCursor<TReadModel>> FindAsync(
 			Expression<Func<TReadModel, bool>> filter,

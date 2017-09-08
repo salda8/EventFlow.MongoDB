@@ -9,13 +9,9 @@ using EventFlow.Extensions;
 using EventFlow.Logs;
 using EventFlow.ReadStores;
 using MongoDB.Driver;
-using EventFlow.MongoDB.ValueObjects;
 
 namespace EventFlow.MongoDB.ReadStores
 {
-	
-
-
 	public class MongoDbReadModelStore<TReadModel> : IMongoDbReadModelStore<TReadModel>
         where TReadModel : class, IMongoDbReadModel, new()
     {
