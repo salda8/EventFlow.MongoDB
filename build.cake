@@ -62,9 +62,7 @@ Task("Clean")
             CleanDirectories(new []
                 {
                     DIR_OUTPUT_PACKAGES,
-                    DIR_OUTPUT_REPORTS,
-                    DIR_OUTPUT_DOCUMENTATION,
-                    DIR_BUILT_DOCUMENTATION,
+                    DIR_OUTPUT_REPORTS
                 });
 				
 			DeleteDirectories(GetDirectories("**/bin"), true);
