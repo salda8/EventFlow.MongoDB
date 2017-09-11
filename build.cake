@@ -42,20 +42,12 @@ var REGEX_NUGETPARSER = new System.Text.RegularExpressions.Regex(
 // IMPORTANT DIRECTORIES
 var DIR_OUTPUT_PACKAGES = System.IO.Path.Combine(PROJECT_DIR, "Build", "Packages");
 var DIR_OUTPUT_REPORTS = System.IO.Path.Combine(PROJECT_DIR, "Build", "Reports");
-var DIR_OUTPUT_DOCUMENTATION = System.IO.Path.Combine(PROJECT_DIR, "Build", "Documentation");
-var DIR_DOCUMENTATION = System.IO.Path.Combine(PROJECT_DIR, "Documentation");
-var DIR_BUILT_DOCUMENTATION = System.IO.Path.Combine(DIR_DOCUMENTATION, "_build");
-var DIR_BUILT_HTML_DOCUMENTATION = System.IO.Path.Combine(DIR_BUILT_DOCUMENTATION, "html");
 
 // IMPORTANT FILES
 var FILE_OPENCOVER_REPORT = System.IO.Path.Combine(DIR_OUTPUT_REPORTS, "opencover-results.xml");
 var FILE_NUNIT_XML_REPORT = System.IO.Path.Combine(DIR_OUTPUT_REPORTS, "nunit-results.xml");
 var FILE_NUNIT_TXT_REPORT = System.IO.Path.Combine(DIR_OUTPUT_REPORTS, "nunit-output.txt");
-var FILE_DOCUMENTATION_MAKE = System.IO.Path.Combine(DIR_DOCUMENTATION, "make.bat");
-var FILE_SOLUTION = System.IO.Path.Combine(PROJECT_DIR, "EventFlow.sln");
-var FILE_OUTPUT_DOCUMENTATION_ZIP = System.IO.Path.Combine(
-    DIR_OUTPUT_DOCUMENTATION,
-    string.Format("EventFlow-HtmlDocs-v{0}.zip", VERSION));
+var FILE_SOLUTION = System.IO.Path.Combine(PROJECT_DIR, "EventFlow.MongoDB.sln");
 
 var RELEASE_NOTES = ParseReleaseNotes(System.IO.Path.Combine(PROJECT_DIR, "RELEASE_NOTES.md"));
 
@@ -110,21 +102,7 @@ Task("Build")
         });
 
 // =====================================================================================================
-Task("Test")
-    .IsDependentOn("Build")
-    .Does(() =>
-        {
-            ExecuteTest("./Source/**/bin/" + CONFIGURATION + "/**/EventFlow*Tests.dll", FILE_NUNIT_XML_REPORT);
-        })
-	.Finally(() => 
-        {
-            UploadArtifact(FILE_NUNIT_TXT_REPORT);
-            UploadTestResults(FILE_NUNIT_XML_REPORT);
-        });
-
-// =====================================================================================================
 Task("Package")
-    .IsDependentOn("Test")
     .Does(() =>
         {
             Information("Version: {0}", RELEASE_NOTES.Version);
@@ -149,26 +127,14 @@ Task("Package")
 						Configuration = CONFIGURATION,
 						OutputDirectory = DIR_OUTPUT_PACKAGES,
 						NoBuild = true,
-						Verbose = false,
 						ArgumentCustomization = aggs => aggs.Append(GetDotNetCoreArgsVersions())
 					});
 			}
         });
 
 // =====================================================================================================
-Task("Documentation")
-    .IsDependentOn("Clean")
-    .Does(() =>
-        {
-            ExecuteCommand(FILE_DOCUMENTATION_MAKE, "html", DIR_DOCUMENTATION);
-
-            ZipFile.CreateFromDirectory(DIR_BUILT_HTML_DOCUMENTATION, FILE_OUTPUT_DOCUMENTATION_ZIP);
-        });
-
-// =====================================================================================================
 Task("All")
     .IsDependentOn("Package")
-    .IsDependentOn("Documentation")
     .Does(() =>
         {
 
@@ -220,132 +186,5 @@ void SetReleaseNotes(string filePath)
     }
 }
 
-void UploadArtifact(string filePath)
-{
-    if (!FileExists(filePath))
-    {
-        Information("Skipping uploading of artifact, does not exist: {0}", filePath);
-        return;
-    }
-
-    if (AppVeyor.IsRunningOnAppVeyor)
-    {
-        Information("Uploading artifact: {0}", filePath);
-
-        AppVeyor.UploadArtifact(filePath);
-    }
-    else
-    {
-        Information("Not on AppVeyor, skipping artifact upload of: {0}", filePath);
-    }
-}
-
-void UploadTestResults(string filePath)
-{
-    if (!FileExists(filePath))
-    {
-        Information("Skipping uploading of test results, does not exist: {0}", filePath);
-        return;
-    }
-
-    if (AppVeyor.IsRunningOnAppVeyor)
-    {
-        Information("Uploading test results: {0}", filePath);
-
-        try
-        {
-            using (var webClient = new WebClient())
-            {
-                webClient.UploadFile(
-                    string.Format(
-                        "https://ci.appveyor.com/api/testresults/nunit3/{0}",
-                        Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID")),
-                    filePath);
-            }
-        }
-        catch (Exception e)
-        {
-            Error(
-                "Failed to upload '{0}' due to {1} - {2}: {3}",
-                filePath,
-                e.Message,
-                e.GetType().Name,
-                e.ToString());
-        }
-        
-        /*
-        // This should work, but doesn't seem to
-        AppVeyor.UploadTestResults(
-            filePath,
-            AppVeyorTestResultsType.NUnit3);*/
-    }    
-    else
-    {
-        Information("Not on AppVeyor, skipping test result upload of: {0}", filePath);
-    }
-}
-
-string ExecuteCommand(string exePath, string arguments = null, string workingDirectory = null)
-{
-    Information("Executing '{0}' {1}", exePath, arguments ?? string.Empty);
-
-    using (var process = new System.Diagnostics.Process())
-    {
-        process.StartInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                FileName = exePath,
-                Arguments = arguments,
-                WorkingDirectory = workingDirectory,
-            };
-        process.Start();
-
-        var output = process.StandardOutput.ReadToEnd();
-
-        if (!process.WaitForExit(30000))
-        {
-            throw new Exception("Failed to stop process!");
-        }
-
-        Debug(output);
-
-        if (process.ExitCode != 0)
-        {
-            throw new Exception(string.Format("Error code {0} was returned", process.ExitCode));
-        }
-
-        return output;
-    }
-}
-
-void ExecuteTest(string files, string resultsFile)
-{
-	OpenCover(tool => 
-		{
-			tool.NUnit3(
-				files,
-				new NUnit3Settings
-					{
-						Framework = "net-4.5",
-						Timeout = 600000,
-						ShadowCopy = false,
-						NoHeader = true,
-						NoColor = true,
-						DisposeRunners = true,
-						OutputFile = FILE_NUNIT_TXT_REPORT,
-						Results = resultsFile
-					});
-        },
-    new FilePath(FILE_OPENCOVER_REPORT),
-    new OpenCoverSettings
-        {
-            ArgumentCustomization = aggs => aggs.Append("-returntargetcode")
-        }
-        .WithFilter("+[EventFlow*]*")
-        .WithFilter("-[*Tests]*")
-        .WithFilter("-[*TestHelpers]*")
-        .WithFilter("-[*Shipping*]*"));
-}
 
 RunTarget(Argument<string>("target", "Package"));
