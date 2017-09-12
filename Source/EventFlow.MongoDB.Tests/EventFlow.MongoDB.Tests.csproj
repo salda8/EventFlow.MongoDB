@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net47</TargetFrameworks>
+    
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EventFlow" Version="0.49.3031" />
+    <PackageReference Include="EventFlow.TestHelpers" Version="0.49.3031" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+    <PackageReference Include="NUnit" Version="3.8.1" />
+    <PackageReference Include="Mongo2Go" Version="2.2.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\EventFlow.MongoDB\EventFlow.MongoDB.csproj" />
+  </ItemGroup>
+
+</Project>
