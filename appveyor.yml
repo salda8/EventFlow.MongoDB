@@ -1,0 +1,16 @@
+init:
+  - git config --global core.autocrlf input
+
+version: 0.1.{build}
+
+skip_tags: true
+
+build_script:
+  - cmd: powershell -NoProfile -ExecutionPolicy unrestricted -Command .\build.ps1 -Target "All"
+
+image: Visual Studio 2017
+
+test: off
+
+artifacts:
+  - path: Build\Packages\*.nupkg
