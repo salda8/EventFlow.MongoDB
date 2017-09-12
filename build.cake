@@ -44,9 +44,6 @@ var DIR_OUTPUT_PACKAGES = System.IO.Path.Combine(PROJECT_DIR, "Build", "Packages
 var DIR_OUTPUT_REPORTS = System.IO.Path.Combine(PROJECT_DIR, "Build", "Reports");
 
 // IMPORTANT FILES
-var FILE_OPENCOVER_REPORT = System.IO.Path.Combine(DIR_OUTPUT_REPORTS, "opencover-results.xml");
-var FILE_NUNIT_XML_REPORT = System.IO.Path.Combine(DIR_OUTPUT_REPORTS, "nunit-results.xml");
-var FILE_NUNIT_TXT_REPORT = System.IO.Path.Combine(DIR_OUTPUT_REPORTS, "nunit-output.txt");
 var FILE_SOLUTION = System.IO.Path.Combine(PROJECT_DIR, "EventFlow.MongoDB.sln");
 
 var RELEASE_NOTES = ParseReleaseNotes(System.IO.Path.Combine(PROJECT_DIR, "RELEASE_NOTES.md"));
@@ -101,6 +98,7 @@ Task("Build")
 
 // =====================================================================================================
 Task("Package")
+    .IsDependentOn("Build")
     .Does(() =>
         {
             Information("Version: {0}", RELEASE_NOTES.Version);
