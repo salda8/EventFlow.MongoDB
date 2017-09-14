@@ -29,15 +29,23 @@ namespace EventFlow.MongoDB.ReadStores
             _readModelDescriptionProvider = readModelDescriptionProvider;
         }
 
-        public Task DeleteAllAsync(CancellationToken cancellationToken)
+	    public async Task DeleteAsync(string id, CancellationToken cancellationToken)
+	    {
+		    var readModelDescription = _readModelDescriptionProvider.GetReadModelDescription<TReadModel>();
+
+		    _log.Information($"Deleting '{typeof(TReadModel).PrettyPrint()}' with id '{id}', from '{readModelDescription.RootCollectionName}'!");
+
+		    var collection = _mongoDatabase.GetCollection<TReadModel>(readModelDescription.RootCollectionName.Value);
+		    await collection.DeleteOneAsync(x => x._id.ToString() == id, cancellationToken);
+	    }
+
+		public async Task DeleteAllAsync(CancellationToken cancellationToken)
         {
             var readModelDescription = _readModelDescriptionProvider.GetReadModelDescription<TReadModel>();
 
             _log.Information($"Deleting ALL '{typeof(TReadModel).PrettyPrint()}' by DROPPING COLLECTION '{readModelDescription.RootCollectionName}'!");
 
-            _mongoDatabase.DropCollection(readModelDescription.RootCollectionName.Value);
-
-            return Task.FromResult(0);
+            await _mongoDatabase.DropCollectionAsync(readModelDescription.RootCollectionName.Value, cancellationToken);
         }
 
         public Task<ReadModelEnvelope<TReadModel>> GetAsync(string id, CancellationToken cancellationToken)
