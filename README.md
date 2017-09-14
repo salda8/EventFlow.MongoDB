@@ -5,6 +5,7 @@ EventFlow.MongoDB offers MongoDB functionality to the [EventFlow](https://github
 ### Features
 * ReadStores - create readmodels which are persisted in MongoDB
 * SnapshotStore - create snapshots which are persisted in MongoDB
+* EventStore - events are persited in MongoDB
 
 ### Installation
 run the following command in the [Package Manager Console](https://docs.nuget.org/docs/start-here/using-the-package-manager-console):
@@ -62,3 +63,9 @@ Configuring EventFlow is identical for both, you only have to implement the prop
 Works as a normal IReadModel and it will update the document corresponding with the _id property.
 #### IMongoDbInserOnlyReadModel
 Every event that is applied will result in a Mongo document being inserted in the collection. A use case for this would be an account ledger where you want to store every single transaction that happens.
+
+#### Configure EventFlow to use MongoDB for Events```c#var resolver = EventFlowOptions.New
+    ...
+    .UseMongoDbEventStore()
+    ...
+    .CreateResolver(true);```

@@ -1,3 +1,5 @@
 ### New in 0.1 (not released yet)
 
-* _Nothing yet_
+* New: Added event storage in MongoDB by implamenting `IEventPersistence`
+* New: Provided `DeleteAsync` in the `IMongoDbReadModelStore<TReadModel>`.
+* New: Provided `FindAsync` in the `IMongoDbReadModelStore<TReadModel>`.
