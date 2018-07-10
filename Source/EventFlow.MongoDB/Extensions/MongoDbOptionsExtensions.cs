@@ -15,7 +15,7 @@ namespace EventFlow.MongoDB.Extensions
             string url,
             string database)
         {
-            MongoUrl mongoUrl = new MongoUrl(url);
+            var mongoUrl = new MongoUrl(url);
             var mongoClient = new MongoClient(mongoUrl);
             return eventFlowOptions
                 .ConfigureMongoDb(mongoClient, database);
@@ -45,7 +45,7 @@ namespace EventFlow.MongoDB.Extensions
         {
             return eventFlowOptions.RegisterServices(sr =>
             {
-                sr.Register(f => mongoDatabaseFactory(), Lifetime.Singleton);
+                sr.Register(f => mongoDatabaseFactory?.Invoke(), Lifetime.Singleton);
                 sr.Register<IReadModelDescriptionProvider, ReadModelDescriptionProvider>(Lifetime.Singleton, true);
                 sr.Register<IInsertOnlyReadModelDescriptionProvider, InsertOnlyReadModelDescriptionProvider>(Lifetime.Singleton, true);
                 sr.Register<IMongoDbEventSequenceStore, MongoDbEventSequenceStore>(Lifetime.Singleton);

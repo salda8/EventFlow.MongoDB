@@ -3,7 +3,7 @@
 namespace EventFlow.MongoDB.ReadStores.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class MongoDbCollectionNameAttribute : Attribute
+    public sealed class MongoDbCollectionNameAttribute : Attribute
     {
         private string collectionName;
         public MongoDbCollectionNameAttribute(string collectionName)
@@ -11,7 +11,7 @@ namespace EventFlow.MongoDB.ReadStores.Attributes
             this.collectionName = collectionName;
         }
 
-        public virtual string CollectionName
+        public string CollectionName
         {
             get { return collectionName; }
         }

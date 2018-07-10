@@ -17,7 +17,7 @@ namespace EventFlow.MongoDB.EventStore
 
 		public long GetNextSequence(string name)
 		{
-			MongoDbCounterDataModel ret = _mongoDatabase.GetCollection<MongoDbCounterDataModel>(_collectionName)
+			var ret = _mongoDatabase.GetCollection<MongoDbCounterDataModel>(_collectionName)
 				.FindOneAndUpdate<MongoDbCounterDataModel>(
 					x => x._id == name,
 					new UpdateDefinitionBuilder<MongoDbCounterDataModel>().Inc(x => x.Seq, value: 1),

@@ -3,7 +3,7 @@
 namespace EventFlow.MongoDB.ReadStores.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class MongoDbGeoSpatialIndexAttribute : Attribute
+    public sealed class MongoDbGeoSpatialIndexAttribute : Attribute
     {
 
     }
