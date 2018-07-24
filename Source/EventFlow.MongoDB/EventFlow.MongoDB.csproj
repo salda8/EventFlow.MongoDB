@@ -1,5 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageId>EventFlow.MongoDB</PackageId>
@@ -23,14 +23,8 @@
     <PackageTags>CQRS ES event sourcing MongoDB</PackageTags>
     <PackageReleaseNotes>UPDATED BY BUILD</PackageReleaseNotes>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <WarningsAsErrors />
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="EventFlow" Version="0.62.3569" />
-    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
-  </ItemGroup>
-
+  <Import Project=".paket\Paket.Restore.targets" />
 </Project>
