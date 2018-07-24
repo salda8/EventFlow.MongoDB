@@ -18,15 +18,17 @@ namespace EventFlow.MongoDB.ReadStores
         private readonly ILog _log;
         private readonly IMongoDatabase _mongoDatabase;
         private readonly IInsertOnlyReadModelDescriptionProvider _readModelDescriptionProvider;
+        private readonly IReadModelFactory<TReadModel> readModelFactory;
 
         public MongoDbInsertOnlyReadModelStore(
             ILog log,
             IMongoDatabase mongoDatabase,
-            IInsertOnlyReadModelDescriptionProvider readModelDescriptionProvider)
+            IInsertOnlyReadModelDescriptionProvider readModelDescriptionProvider, IReadModelFactory<TReadModel> readModelFactory)
         {
             _log = log;
             _mongoDatabase = mongoDatabase;
             _readModelDescriptionProvider = readModelDescriptionProvider;
+            this.readModelFactory = readModelFactory;
         }
 
         public async Task DeleteAsync(string id, CancellationToken cancellationToken)
@@ -70,7 +72,9 @@ namespace EventFlow.MongoDB.ReadStores
             foreach (var readModelUpdate in readModelUpdates)
             {
                 var collection = _mongoDatabase.GetCollection<TReadModel>(readModelDescription.RootCollectionName.Value);
-                var readModelEnvelope = ReadModelEnvelope<TReadModel>.Empty(readModelUpdate.ReadModelId);
+                var readModel = await readModelFactory.CreateAsync(readModelUpdate.ReadModelId, cancellationToken).ConfigureAwait(false);
+
+                var readModelEnvelope = ReadModelEnvelope<TReadModel>.With(readModelUpdate.ReadModelId, readModel);
 
                 ReadModelUpdateResult<TReadModel> readModelUpdateResult = await updateReadModel?.Invoke(readModelContextFactory.Create(readModelUpdate.ReadModelId, false), readModelUpdate.DomainEvents, readModelEnvelope, cancellationToken);
                 readModelEnvelope.ReadModel._id = ObjectIdGenerator.Instance.GenerateId(collection, readModelEnvelope.ReadModel);

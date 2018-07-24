@@ -18,15 +18,17 @@ namespace EventFlow.MongoDB.ReadStores
         private readonly ILog _log;
         private readonly IMongoDatabase _mongoDatabase;
         private readonly IReadModelDescriptionProvider _readModelDescriptionProvider;
+        private readonly IReadModelFactory<TReadModel> readModelFactory;
 
         public MongoDbReadModelStore(
             ILog log,
             IMongoDatabase mongoDatabase,
-            IReadModelDescriptionProvider readModelDescriptionProvider)
+            IReadModelDescriptionProvider readModelDescriptionProvider, IReadModelFactory<TReadModel> readModelFactory)
         {
             _log = log;
             _mongoDatabase = mongoDatabase;
             _readModelDescriptionProvider = readModelDescriptionProvider;
+            this.readModelFactory = readModelFactory;
         }
 
         public async Task DeleteAsync(string id, CancellationToken cancellationToken)
@@ -70,7 +72,7 @@ namespace EventFlow.MongoDB.ReadStores
             return await collection.FindAsync(filter, options, cancellationToken);
         }
 
-        public async Task UpdateAsync(IReadOnlyCollection<ReadModelUpdate> readModelUpdates, IReadModelContextFactory readModelContextFactory, 
+        public async Task UpdateAsync(IReadOnlyCollection<ReadModelUpdate> readModelUpdates, IReadModelContextFactory readModelContextFactory,
             Func<IReadModelContext, IReadOnlyCollection<IDomainEvent>, ReadModelEnvelope<TReadModel>, CancellationToken, Task<ReadModelUpdateResult<TReadModel>>> updateReadModel,
             CancellationToken cancellationToken)
         {
@@ -90,15 +92,15 @@ namespace EventFlow.MongoDB.ReadStores
             {
                 var collection = _mongoDatabase.GetCollection<TReadModel>(readModelDescription.RootCollectionName.Value);
                 var filter = Builders<TReadModel>.Filter.Eq(readmodel => readmodel._id, readModelUpdate.ReadModelId);
-                var result = collection.Find(filter).FirstOrDefault();
+                var readModel = collection.Find(filter).FirstOrDefault();
+                if (readModel is null)
+                {
+                    readModel = await readModelFactory.CreateAsync(readModelUpdate.ReadModelId, cancellationToken).ConfigureAwait(false);
 
-                var readModelEnvelope = result != null
-                    ? ReadModelEnvelope<TReadModel>.With(readModelUpdate.ReadModelId, result)
-                    : ReadModelEnvelope<TReadModel>.Empty(readModelUpdate.ReadModelId);
-                readModelEnvelope.ReadModel._version = readModelEnvelope.Version;
-
+                }
+                var readModelEnvelope = ReadModelEnvelope<TReadModel>.With(readModelUpdate.ReadModelId, readModel);
                 ReadModelUpdateResult<TReadModel> readModelUpdateResult = await updateReadModel?.Invoke(readModelContextFactory.Create(readModelUpdate.ReadModelId, false), readModelUpdate.DomainEvents, readModelEnvelope, cancellationToken);
-                                
+
 
                 await collection.ReplaceOneAsync(
                     x => x._id == readModelUpdateResult.Envelope.ReadModelId,
@@ -108,6 +110,6 @@ namespace EventFlow.MongoDB.ReadStores
             }
         }
 
-        
+
     }
 }
