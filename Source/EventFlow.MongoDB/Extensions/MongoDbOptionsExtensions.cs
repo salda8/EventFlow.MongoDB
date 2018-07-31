@@ -5,6 +5,8 @@ using EventFlow.ReadStores;
 using EventFlow.MongoDB.EventStore;
 using MongoDB.Driver;
 using System;
+using EventFlow.Aggregates;
+using EventFlow.Core;
 
 namespace EventFlow.MongoDB.Extensions
 {
@@ -105,5 +107,22 @@ namespace EventFlow.MongoDB.Extensions
                 })
                 .UseReadStoreFor<IMongoDbInsertOnlyReadModelStore<TReadModel>, TReadModel, TReadModelLocator>();
         }
+        public static IEventFlowOptions UseMongoReadStoreFor<TAggregate, TIdentity, TReadStore, TReadModel>(this IEventFlowOptions eventFlowOptions)
+                where TAggregate : IAggregateRoot<TIdentity>
+                where TIdentity : IIdentity
+                where TReadStore : class, IReadModelStore<TReadModel>
+                where TReadModel : class, IMongoDbReadModel, new()
+
+        {
+            return eventFlowOptions
+                    .RegisterServices(f =>
+                    {
+                        f.Register<IMongoDbReadModelStore<TReadModel>, MongoDbReadModelStore<TReadModel>>();
+                        f.Register<IReadModelStore<TReadModel>>(r => r.Resolver.Resolve<IMongoDbReadModelStore<TReadModel>>());
+                    })
+                    .UseReadStoreFor<TAggregate, TIdentity, TReadStore, TReadModel>();
+
+        }
+
     }
 }
