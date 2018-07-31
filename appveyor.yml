@@ -1,5 +1,22 @@
 version: 1.0.{build}
 image: Visual Studio 2017
-build_script:
-- cmd: PowerShell -Version 2.0 .\build.ps1
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+before_build:
+- pwsh: dotnet restore
+build:
+  verbosity: normal
+after_build:
+- pwsh: >-
+    .paket/paket.exe pack . --template ./EventFlow.MongoDB/paket.template
 
+    nuget push *.nupkg -ApiKey o3yk865auhn9olmkxtmn2v49 -Source https://ci.appveyor.com/nuget/salda8-0h4n5nbbutro/api/v2/package
+
+    nuget push *.nupkg 91b4b205-d68e-4a90-98db-6ce420617a14 -Source https://www.myget.org/F/salda/api/v2/package
