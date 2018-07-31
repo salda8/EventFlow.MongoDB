@@ -1249,23 +1249,3 @@ NUGET
       xunit.extensibility.core (2.4) - restriction: >= netstandard1.1
     xunit.runner.visualstudio (2.4)
       Microsoft.NET.Test.Sdk (>= 15.0) - restriction: >= netcoreapp1.0
-
-GROUP addins
-RESTRICTION: >= net45
-NUGET
-  remote: https://www.nuget.org/api/v2
-    Cake.Paket (4.0)
-
-GROUP build/setup
-RESTRICTION: >= net45
-NUGET
-  remote: https://www.nuget.org/api/v2
-    Cake.Core (0.29) - restriction: && (>= net45) (>= netstandard2.0)
-    Cake.Figlet (1.1)
-      Cake.Core (>= 0.26) - restriction: && (>= net45) (>= netstandard2.0)
-
-GROUP modules
-RESTRICTION: >= net45
-NUGET
-  remote: https://www.nuget.org/api/v2
-    Cake.Paket.Module (4.0)

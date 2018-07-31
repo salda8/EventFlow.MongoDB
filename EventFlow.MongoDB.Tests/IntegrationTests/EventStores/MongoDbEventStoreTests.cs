@@ -4,14 +4,14 @@ using EventFlow.TestHelpers.Suites;
 using EventFlow.Extensions;
 using EventFlow.MongoDB.EventStore;
 using EventFlow.MongoDB.Extensions;
-using NUnit.Framework;
+using Xunit;
 using Mongo2Go;
+using System;
 
 namespace EventFlow.MongoDB.Tests.IntegrationTests.EventStores
 {
-	[Category(Categories.Integration)]
-	[TestFixture]
-	public class MongoDbEventStoreTests : TestSuiteForEventStore
+		
+	public class MongoDbEventStoreTests : TestSuiteForEventStore, IDisposable
 	{
 		private MongoDbRunner _runner;
 		
@@ -25,21 +25,18 @@ namespace EventFlow.MongoDB.Tests.IntegrationTests.EventStores
 			return resolver;
 		}
 
-		[Test]
+	   [Fact]
 		public void Foo()
 		{
 			Assert.True(true);
 		}
 
-		[SetUp]
-		public void SetUp()
+		public MongoDbEventStoreTests()
 		{
 			_runner = MongoDbRunner.StartForDebugging();
 		}
-
-		[TearDown]
-		public void TearDown()
-		{
+	
+		public void Dispose(){
 			_runner.Dispose();
 		}
 	}
