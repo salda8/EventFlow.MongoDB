@@ -1,0 +1,10 @@
+source https://www.myget.org/F/salda/api/v3/index.json
+source https://api.nuget.org/v3/index.json
+
+nuget EventFlow.TestHelpers
+nuget Mongo2Go
+nuget MSTest.TestFramework
+nuget MongoDB.Driver
+nuget xunit 
+nuget xunit.runner.visualstudio
+clitool dotnet-xunit

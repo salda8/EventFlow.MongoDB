@@ -1,0 +1,5 @@
+EventFlow.TestHelpers
+xunit
+xunit.runner.visualstudio
+dotnet-xunit
+mongo2go
