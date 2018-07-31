@@ -33,7 +33,7 @@ namespace EventFlow.MongoDB.Tests.IntegrationTests.EventStores
 
 		public MongoDbEventStoreTests()
 		{
-			_runner = MongoDbRunner.StartForDebugging();
+			_runner = MongoDbRunner.Start();
 		}
 	
 		public void Dispose(){
