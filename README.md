@@ -1,4 +1,4 @@
-# EventFlow.MongoDB
+# EventFlow.MongoDB [![Build status](https://ci.appveyor.com/api/projects/status/xt639wic13u6r41g?svg=true)](https://ci.appveyor.com/project/salda8/eventflow-mongodb)
 
 EventFlow.MongoDB offers MongoDB functionality to the [EventFlow](https://github.com/eventflow/EventFlow) package.
 
