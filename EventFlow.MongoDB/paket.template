@@ -1,0 +1,8 @@
+type project
+id EventFlowMongoDb
+title EventFlowMongoDb
+licenseUrl https://github.com/salda8/EventFlow.MongoDB/blob/master/LICENSE
+projectUrl https://github.com/salda8/EventFlow.MongoDB
+authors Salda8
+description Mongo database support for EventFlow.
+tags NoSql MongoDb DocumentDb EventFlow
